@@ -12,14 +12,24 @@ using namespace std;
 
 IO::IO()
 {
-	this->ifp = NULL;
+	this->qfp = NULL;
+	this->dfp = NULL;
 	this->ofp = NULL;
+	this->data_id = -1;
 }
 
-IO::IO(std::string data, std::string file)
+IO::IO(string query, string data, string file)
 {
-	ifp = fopen(data.c_str(), "r");
-	if(ifp == NULL)
+	this->data_id = -1;
+	this->line = "============================================================";
+	qfp = fopen(query.c_str(), "r");
+	if(qfp == NULL)
+	{
+		cerr<<"input open error!"<<endl;
+		return;
+	}
+	dfp = fopen(data.c_str(), "r");
+	if(dfp == NULL)
 	{
 		cerr<<"input open error!"<<endl;
 		return;
@@ -32,108 +42,105 @@ IO::IO(std::string data, std::string file)
 	}
 }
 
-bool 
-IO::input(vector<Graph*>& gs)
+Graph* 
+IO::input(FILE* fp)
 {
 	char c1, c2;
 	int id0, id1, id2, lb;
-	Graph* graph = NULL;
-	Vertex* vertex = NULL;
-	Edge* edge = NULL;
+	bool flag = false;
+	Graph* ng = NULL;
 
 	while(true)
 	{
-		//build vertices and edges frequence
-		fscanf(this->ifp, "%c", &c1);
+		fscanf(fp, "%c", &c1);
 		if(c1 == 't')
 		{
-			if(graph != NULL)
+			if(flag)
 			{
-				gs.push_back(graph);
+				fseek(fp, -1, SEEK_CUR);
+				return ng;
 			}
-			fscanf(this->ifp, " %c %d\n", &c2, &id0);
-			if(id0 == -1) break;
-			graph = new Graph;
-			continue;
+			flag = true;
+			fscanf(fp, " %c %d\n", &c2, &id0);
+			if(id0 == -1)
+			{
+				return NULL;
+			}
+			else
+			{
+				ng = new Graph;
+			}
 		}
 		else if(c1 == 'v')
 		{
-			fscanf(this->ifp, " %d %d\n", &id1, &lb);
-			vertex = new Vertex(lb);
-			graph->vertices.push_back(vertex);
-			continue;
+			fscanf(fp, " %d %d\n", &id1, &lb);
+			ng->addVertex(lb); 
 		}
 		else if(c1 == 'e')
 		{
-			fscanf(this->ifp, " %d %d %d\n", &id1, &id2, &lb);
-			edge = new Edge(id1, id2, lb);
-			graph->edges.push_back(edge);
-			id0 = graph->edges.size() - 1;
-			graph->vertices[id1]->neighbors.push_back(Neighbor(id2, id0));
-			graph->vertices[id2]->neighbors.push_back(Neighbor(id1, id0));
-			//ensure label order for edge here, notice that both A-B and B-A exists
-			if(graph->getVertex1LabelByEdge(id0) > graph->getVertex2LabelByEdge(id0))
-			{
-				edge->from = id2;
-				edge->to = id1;
-			}
-			continue;
+			fscanf(fp, " %d %d %d\n", &id1, &id2, &lb);
+			//NOTICE:we treat this graph as directed, each edge represents two
+			//This may cause too many matchings, if to reduce, only add the first one
+			ng->addEdge(id1, id2, lb);
+			ng->addEdge(id2, id1, lb);
 		}
 		else 
 		{
-			cerr<<"ERROR in IO::input() -- invalid char"<<endl;
-			exit(1);
+			cerr<<"ERROR in input() -- invalid char"<<endl;
+			return false;
 		}
+	}
+	return NULL;
+}
+
+bool 
+IO::input(Graph*& data_graph)
+{
+	data_graph = this->input(this->dfp);
+	if(data_graph == NULL)
+		return false;
+	this->data_id++;
+	return true;
+}
+
+bool 
+IO::input(vector<Graph*>& query_list)
+{
+	Graph* graph = NULL;
+	while(true)
+	{
+		graph = this->input(qfp);
+		if(graph == NULL) //to the end
+			break;
+		query_list.push_back(graph);
 	}
 
 	return true;
 }
 
-//DEBUG:output redirection not work?
 bool 
-IO::output(Pattern& p, int frequence)
+IO::output(int qid)
 {
-	p.pid = Pattern::current_pid++;
-	unsigned xsize = p.frequence();
-	//for single vertex, use frequence instead of xsize
-	//but no support available
-	if(frequence < 0)
-		frequence = xsize;
+	fprintf(ofp, "query graph:%d    data graph:%d\n", qid, this->data_id);
+	fprintf(ofp, "%s\n", line.c_str());
+	return true;
+}
 
-	fprintf(this->ofp, "t # %ld * %d\n", p.pid, xsize);
-	//printf("t # %ld * %d\n", p.pid, frequence);
-	int vsize = p.vSize();
-	int esize = p.eSize();
-	vector<Vertex*>& vl = p.vertices;
-	vector<Edge*>& el = p.edges;
-	int i;
-	unsigned j;
-	
-	for(i = 0; i < vsize; ++i)
+bool
+IO::output()
+{
+	fprintf(ofp, "\n\n\n");
+	return true;
+}
+
+bool 
+IO::output(int* m, int size)
+{
+	for(int i = 0; i < size; ++i)
 	{
-		//printf("v %d %d\n", i, vl[i]->label);
-		fprintf(this->ofp, "v %d %d\n", i, vl[i]->label);
+		fprintf(ofp, "(%d, %d) ", i, m[i]);
 	}
-
-	for(i = 0; i < esize; ++i)
-	{
-		//printf("e %d %d %d\n", el[i]->from, el[i]->to, el[i]->label);
-		fprintf(this->ofp, "e %d %d %d\n", el[i]->from, el[i]->to, el[i]->label);
-	}
-
-	fprintf(this->ofp, "x");
-	//printf("x");
-	for(j = 0; j < xsize; ++j)
-	{
-		//printf(" %d", p.support[j]->gid);
-		fprintf(this->ofp, " %d", p.support[j]->gid);
-	}
-	fprintf(this->ofp, "\n");
-	//printf("\n");
-
-	//NOTICE:fflush is needed to flush all cached writes to disk
-	//do it at last to keep efficience
-	//fflush(this->ofp);
+	fprintf(ofp, "\n");
 	return true;
 }
 
@@ -145,8 +152,10 @@ IO::flush()
 
 IO::~IO()
 {
-	fclose(this->ifp);
-	this->ifp = NULL;
+	fclose(this->qfp);
+	this->qfp = NULL;
+	fclose(this->dfp);
+	this->dfp = NULL;
 	fclose(this->ofp);
 	this->ofp = NULL;
 }

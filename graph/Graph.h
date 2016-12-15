@@ -11,72 +11,20 @@
 
 #include "../util/Util.h"
 
-class Edge
-{
-public:
-	VID from;
-	VID to;
-	//EID id;
-	LABEL label;
-	Edge()
-	{
-		from = to = -1;
-		label = -1;
-	}
-	Edge(VID _from, VID _to, LABEL _lb):from(_from), to(_to), label(_lb)
-	{
-	}
-};
-
-class OneEdge
-{
-public:
-	LABEL from;
-	LABEL to;
-	LABEL pred;
-	OneEdge()
-	{
-		from = to = pred = -1;
-	}
-	//NOTICE:we should keep from<=to to ensure correctness
-	OneEdge(LABEL _from, LABEL _to, LABEL _pred)
-	{
-		//Util::swapLabel(_from, _to);
-		from = _from;
-		to = _to;
-		pred = _pred;
-	}
-	bool operator<(const OneEdge& ins) const
-	{
-		if(this->from != ins.from) return this->from < ins.from;
-		if(this->pred != ins.pred) return this->pred < ins.pred;
-		if(this->to != ins.to) return this->to < ins.to;
-		return false;
-	}
-	bool operator==(const OneEdge& ins) const
-	{
-		return this->from == ins.from && this->pred == ins.pred && this->to == ins.to;
-	}
-
-	bool operator!=(const OneEdge& ins) const
-	{
-		return this->from != ins.from || this->pred != ins.pred || this->to != ins.to;
-	}
-};
-
 class Neighbor
 {
 public:
 	VID vid;
-	EID eid;
+	LABEL elb;
 	Neighbor()
 	{
-		vid = eid = -1;
+		vid = -1;
+		elb = -1;
 	}
-	Neighbor(int _vid, int _eid)
+	Neighbor(int _vid, int _elb)
 	{
 		vid = _vid;
-		eid = _eid;
+		elb = _elb;
 	}
 };
 
@@ -86,7 +34,8 @@ public:
 	//VID id;
 	LABEL label;
 	//NOTICE:VID and EID is just used in this single graph
-	std::vector<Neighbor> neighbors;
+	std::vector<Neighbor> in;
+	std::vector<Neighbor> out;
 	Vertex()
 	{
 		label = -1;
@@ -99,37 +48,15 @@ public:
 class Graph
 {
 public:
-	//GID id;
-	//gid is just the vector index
-	std::vector<Vertex*> vertices;
-	std::vector<Edge*> edges;
-	Graph()
-	{
-	}
-	~Graph();
+	std::vector<Vertex> vertices;
+	Graph() { }
+	~Graph() { }
 	int vSize() const
 	{
 		return vertices.size();
 	}
-	int eSize() const
-	{
-		return edges.size();
-	}
-	void copy(const Graph* graph);
-	Vertex* getVertex1ByEdge(EID eid);
-	Vertex* getVertex2ByEdge(EID eid);
-	VID getVertex1IDByEdge(EID eid);
-	VID getVertex2IDByEdge(EID eid);
-	LABEL getVertex1LabelByEdge(EID eid);
-	LABEL getVertex2LabelByEdge(EID eid);
-	LABEL getLabelByEdge(EID eid);
-	LABEL getLabelByVertex(VID vid);
-	void addVertex(Vertex* vertex);
-	void addEdge(Edge* edge);
-	void addNeighbor(VID vid, Neighbor neigh);
-	std::vector<Neighbor>& getNeighborByVertex(VID vid);
-	VID getEdgeNeighbor(EID eid, VID vid);
-	void rebuild();
+	void addVertex(LABEL _vlb);
+	void addEdge(VID _from, VID _to, LABEL _elb);
 };
 
 #endif
