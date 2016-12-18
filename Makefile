@@ -5,7 +5,7 @@ CFLAGS = -c -Wall -O6 #-fprofile-arcs -ftest-coverage -coverage #-pg
 EXEFLAG = -O6 #-fprofile-arcs -ftest-coverage -coverage #-pg #-O2
 	 
 #add -lreadline -ltermcap if using readline or objs contain readline
-library = -lgcov -coverage
+library = #-lgcov -coverage
 
 objdir = ./objs/
 objfile = $(objdir)Util.o $(objdir)IO.o $(objdir)Match.o $(objdir)Graph.o
@@ -30,7 +30,7 @@ $(objdir)Match.o: match/Match.cpp match/Match.h
 .PHONY: clean dist tarball test sumlines
 
 clean:
-	rm -f $(objdir)*.o 
+	rm -f $(objdir)*
 dist: clean
 	rm -f *.txt dig
 

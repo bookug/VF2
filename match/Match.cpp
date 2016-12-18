@@ -72,7 +72,7 @@ Match::checkCore(vector<Neighbor>& qlist, vector<Neighbor>& dlist)
 {
 	//data  another array record the mapping label? record the query is better? 2 directions
 	int qnum = 0, dnum = 0; 
-	int i, j, k, size1, size2;
+	int i, j, size1, size2;
 	LABEL* temp = new LABEL[qsize];
 	//NOTICE+WARN:sizeof(temp) is only 8 bytes
 	//memset(temp, -1, sizeof(temp));
@@ -121,7 +121,7 @@ Match::checkOther(vector<Neighbor>& qlist, vector<Neighbor>& dlist)
 {
 	int qin_num = 0, qout_num = 0, qres_num = 0; 
 	int din_num = 0, dout_num = 0, dres_num = 0;
-	int i, j, k, size1, size2;
+	int i, j, size1, size2;
 
 	size1 = qlist.size();
 	for(i = 0; i < size1; ++i)
