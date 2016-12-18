@@ -58,6 +58,7 @@ main(int argc, const char * argv[])
 			io.output(i);
 			m.match(io);
 			io.output();
+			io.flush();
 		}
 		delete data_graph;
 	}

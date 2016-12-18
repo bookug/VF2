@@ -61,10 +61,8 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-//#define STREAM_ON 1			
-
 //indicate that in debug mode
-//#define DEBUG_STREAM
+//#define DEBUG
 
 #define MAX_PATTERN_SIZE 1000000000
 
@@ -84,7 +82,6 @@ public:
 	Util();
 	~Util();
 	static long get_cur_time();
-	static void swapLabel(LABEL& lb1, LABEL& lb2);
 };
 
 #endif //_UTIL_UTIL_H

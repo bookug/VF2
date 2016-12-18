@@ -18,23 +18,33 @@ class Match
 public:
 	Match(Graph* _query, Graph* _data);
 	void match(IO& io);
+	~Match();
 
 private:
+	int qnid, dnid;
 	int qsize, dsize;
 	Graph* query;
 	Graph* data;
 	//structures for query
 	int* qcore;
-	bool* qin;
-	bool* qout;
-	int qin_num, qout_num;
+	int* qin;
+	int* qout;
 	//structures for data
 	int* dcore;
-	bool* din;
-	bool* dout;
-	int din_num, dout_num;
+	int* din;
+	int* dout;
 	//call with matching num
 	void dfs(int num, IO& io);
+	//decide if to prune this branch
+	bool prune();
+	bool equal(LABEL lb1, LABEL lb2);
+	bool checkCore(std::vector<Neighbor>& qlist, std::vector<Neighbor>& dlist);
+	bool checkOther(std::vector<Neighbor>& qlist, std::vector<Neighbor>& dlist);
+	//update the 6 queues
+	void update(int depth);
+	void modify(int depth, std::vector<Neighbor>& list, int* queue);
+	//restore the data structures after each dfs iteration
+	void restore(int depth);
 };
 
 #endif

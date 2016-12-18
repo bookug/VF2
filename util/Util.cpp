@@ -26,12 +26,3 @@ Util::get_cur_time()
     return (tv.tv_sec*1000 + tv.tv_usec/1000);
 }
 
-void
-Util::swapLabel(LABEL& lb1, LABEL& lb2)
-{
-	if(lb1 <= lb2) return;
-	LABEL lb3 = lb1;
-	lb1 = lb2;
-	lb2 = lb3;
-}
-

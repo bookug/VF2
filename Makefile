@@ -1,8 +1,8 @@
 #compile parameters
 
 CC = g++
-CFLAGS = -c -Wall #-fprofile-arcs -ftest-coverage -coverage #-pg #-O2
-EXEFLAG = #-fprofile-arcs -ftest-coverage -coverage #-pg #-O2
+CFLAGS = -c -Wall -O6 #-fprofile-arcs -ftest-coverage -coverage #-pg
+EXEFLAG = -O6 #-fprofile-arcs -ftest-coverage -coverage #-pg #-O2
 	 
 #add -lreadline -ltermcap if using readline or objs contain readline
 library = -lgcov -coverage
@@ -35,7 +35,7 @@ dist: clean
 	rm -f *.txt dig
 
 tarball:
-	tar -czvf vf2.tar.gz main util match io graph Makefile README.md objs script
+	tar -czvf vf2.tar.gz main util match io graph Makefile README.md objs script vflib2
 
 test: main/test.o $(objfile)
 	$(CC) $(EXEFLAG) -o test main/test.cpp $(objfile) $(library)
