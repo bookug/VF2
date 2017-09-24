@@ -1,5 +1,11 @@
 VF2
 
+WARN: vf2算法的第五个剪枝条件只适用于induced subgraph matching
+查询图里两点没边，在数据图的匹配中对应的两点也不能有边，这样第五个剪枝条件（二步邻居约束）才能成立。
+可看《子图匹配三十年》，一个各种子图匹配算法的综述。
+./run data.graph query.graph
+查询结果默认在ans.txt中
+
 NOTICE:just compared with vflib2, ./run data query output
 place all query graphs in memory and read data graph one by one
 the maxium node num in data graphs are 213
