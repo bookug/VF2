@@ -1,4 +1,4 @@
-VF2
+# VF2
 
 ---
 
@@ -7,8 +7,19 @@ we enable label checking in this code, including vertex label and edge label
 ---
 
 WARN: vf2算法的第五个剪枝条件只适用于induced subgraph matching
+
+基于embedding subgraph， 而vf2算法的第五个剪枝条件只适用于induced subgraph matching
 查询图里两点没边，在数据图的匹配中对应的两点也不能有边，这样第五个剪枝条件（二步邻居约束）才能成立。
 可看《子图匹配三十年》，一个各种子图匹配算法的综述。
+
+---
+
+## Paper 
+
+A (Sub)Graph Isomorphism Algorithm for Matching Large Graphs     TPAMI, 2004 (CCF A journal)
+
+---
+
 ./run data.graph query.graph
 查询结果默认在ans.txt中
 
