@@ -27,3 +27,16 @@
 *.exe
 *.out
 *.app
+
+*.g
+*.log
+*.tmp
+*.data
+*.query
+
+# results
+*.txt
+*.log
+*.tmp
+
+

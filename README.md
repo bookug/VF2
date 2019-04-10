@@ -1,5 +1,11 @@
 VF2
 
+---
+
+we enable label checking in this code, including vertex label and edge label
+
+---
+
 WARN: vf2算法的第五个剪枝条件只适用于induced subgraph matching
 查询图里两点没边，在数据图的匹配中对应的两点也不能有边，这样第五个剪枝条件（二步邻居约束）才能成立。
 可看《子图匹配三十年》，一个各种子图匹配算法的综述。
@@ -19,4 +25,9 @@ compare with vflib and naughty, the latter is called the fastest, using auto-mor
 vflib2中要求节点个数不能超过65535，而且它的子图同构是指最标准的格式，而非子图包含，即要求边是相互对应的
 Another way is to build a graph library considering the common subgraphs of all data graphs, to reduce redundent matching with query graphs
 
+---
+
+http://users.cecs.anu.edu.au/~bdm/nauty/
+
+http://pallini.di.uniroma1.it/
 

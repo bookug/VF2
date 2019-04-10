@@ -52,6 +52,8 @@ main(int argc, const char * argv[])
 		{
 			break;
 		}
+		//cout<<"data graph input"<<endl;
+        long begin = Util::get_cur_time();
 		for(i = 0; i < qnum; ++i)
 		{
 			Match m(query_list[i], data_graph);
@@ -60,6 +62,9 @@ main(int argc, const char * argv[])
 			io.output();
 			io.flush();
 		}
+        long end = Util::get_cur_time();
+        cerr<<"match used: "<<(end-begin)<<" ms"<<endl;
+
 		delete data_graph;
 	}
 

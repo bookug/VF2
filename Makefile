@@ -3,6 +3,8 @@
 CC = g++
 CFLAGS = -c -Wall -O6 #-fprofile-arcs -ftest-coverage -coverage #-pg
 EXEFLAG = -O6 #-fprofile-arcs -ftest-coverage -coverage #-pg #-O2
+#CFLAGS = -c -Wall -g #-fprofile-arcs -ftest-coverage -coverage #-pg
+#EXEFLAG = -g #-fprofile-arcs -ftest-coverage -coverage #-pg #-O2
 	 
 #add -lreadline -ltermcap if using readline or objs contain readline
 library = #-lgcov -coverage
@@ -10,10 +12,10 @@ library = #-lgcov -coverage
 objdir = ./objs/
 objfile = $(objdir)Util.o $(objdir)IO.o $(objdir)Match.o $(objdir)Graph.o
 
-all: run
+all: vf2.exe
 
-run: main/run.cpp $(objfile)
-	$(CC) $(EXEFLAG) -o run main/run.cpp $(objfile) $(library)
+vf2.exe: main/run.cpp $(objfile)
+	$(CC) $(EXEFLAG) -o vf2.exe main/run.cpp $(objfile) $(library)
 
 $(objdir)Util.o: util/Util.cpp util/Util.h
 	$(CC) $(CFLAGS) util/Util.cpp -o $(objdir)Util.o

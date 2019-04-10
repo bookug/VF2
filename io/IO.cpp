@@ -70,6 +70,9 @@ IO::input(FILE* fp)
 			{
 				ng = new Graph;
 			}
+			//read vertex num, edge num, vertex label num, edge label num
+			int numVertex, numEdge, vertexLabelNum, edgeLabelNum;
+			fscanf(fp, " %d %d %d %d\n", &numVertex, &numEdge, &vertexLabelNum, &edgeLabelNum);
 		}
 		else if(c1 == 'v')
 		{
@@ -81,8 +84,9 @@ IO::input(FILE* fp)
 			fscanf(fp, " %d %d %d\n", &id1, &id2, &lb);
 			//NOTICE:we treat this graph as directed, each edge represents two
 			//This may cause too many matchings, if to reduce, only add the first one
+			//cout<<"check: "<<id1<<" "<<id2<<" "<<lb<<endl;
 			ng->addEdge(id1, id2, lb);
-			ng->addEdge(id2, id1, lb);
+			//ng->addEdge(id2, id1, lb);
 		}
 		else 
 		{
@@ -100,6 +104,7 @@ IO::input(Graph*& data_graph)
 	if(data_graph == NULL)
 		return false;
 	this->data_id++;
+	//data_graph->transformToCSR();
 	return true;
 }
 
@@ -112,6 +117,7 @@ IO::input(vector<Graph*>& query_list)
 		graph = this->input(qfp);
 		if(graph == NULL) //to the end
 			break;
+		//graph->transformToCSR();
 		query_list.push_back(graph);
 	}
 

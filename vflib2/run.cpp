@@ -128,7 +128,8 @@ bool input(FILE* fp, ARGEdit& ed)
 			fscanf(fp, " %d %d %d\n", &id1, &id2, &lb);
 			//cout<<id1<<" "<<id2<<" "<<lb<<endl;
 			ed.InsertEdge(id1, id2, new int(lb));
-			ed.InsertEdge(id2, id1, new int(lb));
+			//NOTICE: here we choose how to treat the edge
+			//ed.InsertEdge(id2, id1, new int(lb));
 		}
 		else 
 		{

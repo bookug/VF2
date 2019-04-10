@@ -10,6 +10,8 @@
 
 using namespace std;
 
+//#define DEBUG 1
+
 Match::Match(Graph* _query, Graph* _data)
 {
 	this->query = _query;
@@ -79,6 +81,7 @@ Match::checkCore(vector<Neighbor>& qlist, vector<Neighbor>& dlist)
 	memset(temp, -1, sizeof(LABEL) * qsize);
 
 	size1 = qlist.size();
+	//cout<<"qlist size: "<<size1<<endl;
 	for(i = 0; i < size1; ++i)
 	{
 		j = qlist[i].vid;
@@ -90,14 +93,18 @@ Match::checkCore(vector<Neighbor>& qlist, vector<Neighbor>& dlist)
 	}
 
 	size2 = dlist.size();
+	//cout<<"dlist size: "<<size2<<endl;
 	for(i = 0; i < size2; ++i)
 	{
 		j = dlist[i].vid;
-		if(dcore[j] >= 0)
+		//NOTICE: the differnce is whether to use the fifth pruning strategy(if using the induced subgraph isomorphism)
+		//if(dcore[j] >= 0)
+		if(dcore[j] >= 0 && temp[dcore[j]] != -1)
 		{
 			//check the edge label
 			if(dlist[i].elb != temp[dcore[j]])
 			{
+				//cout<<"edge label not matched"<<endl;
 				delete[] temp;
 				return false;
 			}
@@ -160,7 +167,9 @@ Match::checkOther(vector<Neighbor>& qlist, vector<Neighbor>& dlist)
 		}
 	}
 
-	if(din_num < qin_num || dout_num < qout_num || dres_num < qres_num)
+	//NOTICE: the differnce is whether to use the fifth pruning strategy(if using the induced subgraph isomorphism)
+	//if(din_num < qin_num || dout_num < qout_num || dres_num < qres_num)
+	if(din_num < qin_num || dout_num < qout_num)
 	{
 		return false;
 	}

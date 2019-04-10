@@ -26,6 +26,35 @@ public:
 		vid = _vid;
 		elb = _elb;
 	}
+	bool operator<(const Neighbor& _nb) const
+	{
+		if(this->elb == _nb.elb)
+		{
+			return this->vid < _nb.vid;
+		}
+		else
+		{
+			return this->elb < _nb.elb;
+		}
+	}
+};
+
+class Element
+{
+public:
+	int label;
+	int id;
+	bool operator<(const Element& _ele) const
+	{
+		if(this->label == _ele.label)
+		{
+			return this->id <_ele.id;
+		}
+		else
+		{
+			return this->label < _ele.label;
+		}
+	}
 };
 
 class Vertex
@@ -57,6 +86,27 @@ public:
 	}
 	void addVertex(LABEL _vlb);
 	void addEdge(VID _from, VID _to, LABEL _elb);
+
+	//CSR format: 4 pointers
+	int vertex_num;
+	int* vertex_value;
+
+	int* row_offset_in;  //range is 0~vertex_num, the final is a border(not valid vertex)
+	int* edge_value_in;
+	int* edge_offset_in;
+	int* column_index_in;
+
+	int* row_offset_out;
+	int* edge_value_out;
+	int* edge_offset_out;
+	int* column_index_out;
+
+	//Inverse Label List
+	int label_num;
+	int* inverse_label;
+	int* inverse_offset;
+	int* inverse_vertex;
+	void transformToCSR();
 };
 
 #endif
